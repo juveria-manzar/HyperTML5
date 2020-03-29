@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DialogEvent</title>
+    <link href="https://fonts.googleapis.com/css?family=Raleway:500,800&display=swap" rel="stylesheet">
+    <style>
+        body,
+        input,
+        button {
+            font-family: 'Raleway', sans-serif;
+        }
+        
+        body {
+            margin: 88px 128px 0;
+        }
+        
+        .btn {
+            background: #CBCBCB;
+            color: white;
+            background: linear-gradient(to-left, #315eea, #2a5bf4);
+            outline: none;
+            border: none;
+            font-size: 19px;
+            padding: .8em 3em;
+            border-radius: 4px;
+            transition: all .2s;
+            text-transform: uppercase;
+        }
+        
+        .btn:hover {
+            opacity: .8;
+        }
+        
+        .btn-danger {
+            background: #E63131;
+        }
+        
+        dialog {
+            border: none;
+            text-align: center;
+            font-size: 1.2rem;
+            background-color: #f5f5f5;
+            padding: 2.6rem 6.6rem;
+            border-left: 12px solid #315eea;
+        }
+        
+        dialog::backdrop {
+            background-color: rgba(29, 29, 29, .9);
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Dialog Event</h1>
+    <button type="button" class="btn  btn-danger" onclick="showModal()">Delete</button>
+
+    <dialog id="modal">
+        <h2>Are you sure?</h2>
+        <button type="button" class="btn" onclick="closeModal()">Cancel</button>
+        <button type="button" class="btn  btn-danger" onclick="closeModal(); confirmDelete()">Confirm</button>
+    </dialog>
+
+    <script>
+        let modal = document.getElementById('modal')
+
+        function confirmDelete() {
+            console.log('Delete');
+        }
+
+        function showModal() {
+            modal.showModal()
+        }
+
+        function closeModal() {
+            modal.close()
+        }
+    </script>
+</body>
+
+</html>
