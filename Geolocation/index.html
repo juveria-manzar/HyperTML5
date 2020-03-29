@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css?family=Raleway:500,800&display=swap" rel="stylesheet">
+    <title>Geolocation</title>
+    <style>
+        body,
+        input,
+        button {
+            font-family: 'Raleway', sans-serif;
+        }
+        
+        body {
+            margin: 88px 40px 40px;
+        }
+        
+        h1 {
+            font-weight: 500;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Geolocation</h1>
+    <button type="button" name="button" onclick="getLocation()">Get location</button>
+    <h2>Latitude: <span id="lat"></span></h2>
+    <h2>Longitude: <span id="long"></span></h2>
+    <script>
+        function getLocation() {
+            console.log('Get Location')
+            if (navigator.geolocation) {
+
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    let lat = position.coords.latitude
+                    document.getElementById('lat').innerHTML = lat;
+
+                    let long = position.coords.longitude
+                    document.getElementById('long').innerHTML = long;
+                }, function(error) {
+                    console.log(error)
+                })
+
+            } else {
+                console.log('Your browser doesnt support Geolocation')
+            }
+        }
+    </script>
+</body>
+
+</html>
