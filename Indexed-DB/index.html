@@ -1,0 +1,113 @@
+<!--
+@author Juveria-Manzar
+@email juveriamanzar29@gmail.com
+@create date 2020-03-31 02:24:40
+@desc IndexedDB is a low-level API for client-side storage of significant amounts of structured data, including files/blobs. This API uses indexes to enable high-performance searches of this data. While Web Storage is useful for storing smaller amounts of data, it is less useful for storing larger amounts of structured data. IndexedDB provides a solution.
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css?family=Raleway:500,800&display=swap" rel="stylesheet">
+
+    <!-- indexedDB is a more powerful storage mechanism than web storage  -->
+    <!-- asynchronous-use of callbacks -->
+    <!-- capable of storing objects -->
+    <title>Indexed DB</title>
+    <style>
+        body,
+        input,
+        button {
+            font-family: 'Raleway', sans-serif;
+        }
+        
+        body {
+            margin: 88px 40px 40px;
+        }
+    </style>
+</head>
+
+<body onload>
+    <button id="button" type="button" name="button">Add song to playlist</button>
+
+
+    <script>
+        let database
+        window.onload = () => {
+            let req = window.indexedDB.open("PlaylistDB", 1)
+            req.onsuccess = () => {
+                database = req.result;
+            }
+            req.onerror = (event) => {
+                alert('There was an error: ', event)
+            }
+
+            req.onupgradeneeded = (event) => {
+                console.log('create')
+                let db = req.result
+                let objectStore = db.createObjectStore("Songs", {
+                    keyPath: "id",
+                    autoIncrement: true
+                })
+            }
+        }
+
+        //an object with two prpoerties
+        function Song(name, artist) {
+            this.name = name
+            this.artist = artist
+        }
+        // let mySong=new Song('Liar','Camila Cabillo')
+        function addSong(song, success, error) {
+            let transaction = database.transaction(['Songs'], 'readwrite')
+            let objectStore = transaction.objectStore("Songs")
+            let request = objectStore.add(song)
+
+            request.onerror = error
+            request.onsuccess = success
+
+        }
+
+        document.getElementById('button').addEventListener('click', () => {
+            let song = new Song('Liar', 'Camila Cabillo')
+
+            addSong(song, () => {
+                console.log('Song succesfullty stored')
+                readSongs((songs) => {
+                    console.log(songs)
+                }, () => {
+                    console.log('error in reading songs')
+                })
+            }, () => {
+                console.log('Error')
+            })
+        })
+
+
+        function readSongs(success, error) {
+            let transaction = database.transaction(['Songs'], "readonly")
+            let objectStore = transaction.objectStore('Songs')
+
+            let request = objectStore.openCursor()
+            request.onerror = error;
+
+            let songs = []
+
+            request.onsuccess = function(event) {
+
+                let cursor = event.target.result;
+                if (cursor) {
+                    let song = cursor.value;
+                    songs.push(song)
+                    cursor.continue()
+                } else {
+                    success(songs)
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>
