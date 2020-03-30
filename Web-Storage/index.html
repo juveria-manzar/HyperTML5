@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Storage</title>
+    <link href="https://fonts.googleapis.com/css?family=Raleway:500,800&display=swap" rel="stylesheet">
+    <style>
+        body,
+        input,
+        button {
+            font-family: 'Raleway', sans-serif;
+        }
+        
+        body {
+            margin: 88px 40px 40px;
+        }
+        
+        h1 {
+            font-size: 58px;
+        }
+        
+        button {
+            margin-top: 12px;
+        }
+        
+        .hide {
+            display: none;
+        }
+    </style>
+</head>
+
+<body onload="refresh()">
+    <h1 id="welcome" class="hide">Welcome Back, <span id="user-name"></span> </h1>
+    <form action="" method="post" id="user" onsubmit="updateUser(event)" autocomplete="off">
+        <h2>Whats your name?</h2>
+        <input type="text" name="name" placeholder="Your name here.">
+
+        <h2>What's your favourite color?</h2>
+        <input type="color" name="color" value="#ffffff">
+        <br>
+        <br>
+
+        <button type="submit" name="update" onclick="updateUser(event)">Update</button>
+        <button type="button" class="hide" id="delete-button" onclick="deleteAll()">Delete Data</button>
+
+    </form>
+
+    <script>
+        var localStorage = ('localStorage' in window);
+        let userForm = document.forms.user;
+
+        function updateUser(event) {
+            event.preventDefault()
+            console.log("Update user")
+            saveData('name', userForm.name.value)
+            saveData('favColor', userForm.color.value)
+            refresh()
+        }
+
+        function saveData(key, value) {
+            if (localStorage) {
+                localStorage.setItem(key, value)
+            } else {
+                alert('Web storage is not supported')
+            }
+        }
+
+        function loadData(key) {
+            if (localStorage) {
+                if (key in localStorage) {
+                    return localStorage.getItem(key)
+                }
+            } else {
+                alert('Web storage is not supported')
+            }
+
+        }
+
+        function refresh() {
+            if (loadData('name')) {
+                let name = loadData('name')
+                userForm.name.setAttribute("value", name)
+
+                let color = loadData('favColor');
+                userForm.color.setAttribute("value", color)
+
+                document.getElementById('welcome').style.display = 'block'
+                document.getElementById('user-name').innerHTML = name;
+
+                document.body.style.backgroundColor = color
+
+                document.getElementById('delete-button').style.display = 'inline'
+
+            }
+        }
+
+        function deleteData(key) {
+            if (localStorage) {
+                localStorage.removeItem(key)
+            } else {
+                alert('Web storage is not supported')
+            }
+        }
+
+        function deleteAll() {
+            // deleteData('name')
+            // deleteData('favColor')
+
+            locationStorage.clear()
+            location.reload()
+        }
+    </script>
+</body>
+
+</html>
